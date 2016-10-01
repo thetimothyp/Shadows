@@ -9,6 +9,12 @@ window.onload = function() {
 	canvas.height = canvasHeight;
 	ctx = canvas.getContext("2d");
 	var game = new GameController(canvas, ctx);
+	for (var i = 1; i < 10; i++) {
+		game.blocks.push(new Block(i * 100, 100));
+	}
+	for (var i = 0; i < 100; i++) {
+		game.blocks.push(new Block(i * 10, 0));
+	}
 	game.start();
 }
 
@@ -17,8 +23,9 @@ function GameController(canvas, ctx) {
 	this.ctx = ctx;
 	this.inputController = new InputController(this);
 	this.inputController.init();
-	this.player = new Player(10, 300, this, this.inputController);
+	this.player = new Player(100, 300, this);
 	this.clearColor = "#FFFFFF";
+	this.blocks = [];
 }
 
 GameController.prototype.start = function() {
@@ -30,8 +37,6 @@ GameController.prototype.start = function() {
 GameController.prototype.clear = function() {
 	this.ctx.save();
 	this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-	this.ctx.fillStyle = this.clearColor;
-	this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 	this.ctx.restore();
 }
 
@@ -42,17 +47,12 @@ GameController.prototype.update = function() {
 GameController.prototype.render = function() {
 	this.clear();
 	this.ctx.save();
-	// for (var i = 0; i < this.canvas.width / 10; i++) {
-	// 	this.ctx.moveTo(i * 10, 0);
-	// 	this.ctx.lineTo(i * 10, this.canvas.height);
-	// }
-	// for (var i = 0; i < this.canvas.height / 10; i++) {
-	// 	this.ctx.moveTo(0, i * 10);
-	// 	this.ctx.lineTo(this.canvas.width, i * 10);
-	// }
-	// this.ctx.lineWidth = 1;
-	// this.ctx.strokeStyle = "#EEEEEE";
-	// this.ctx.stroke();
+	this.ctx.beginPath();
+	for (var i = 0; i < this.blocks.length; i++) {
+		var block = this.blocks[i];
+		this.ctx.rect(block.x, block.y, 10, 10);
+	}
+	this.ctx.fill();
 	this.player.render();
 	this.ctx.restore();
 }
@@ -63,11 +63,11 @@ function Point(x, y) {
 	this.parent = null;
 }
 
-function Player(x, y, game, input) {
+function Player(x, y, game) {
 	this.x = x;
 	this.y = y;
 	this.game = game;
-	this.input = input;
+	this.input = this.game.inputController;
 }
 
 Player.prototype.update = function() {
@@ -76,7 +76,10 @@ Player.prototype.update = function() {
 }
 
 Player.prototype.render = function() {
-	this.game.ctx.fillRect(this.x, this.y, 25, 25);
+	this.game.ctx.save();
+	this.game.ctx.fillStyle = "#FF0000";
+	this.game.ctx.fillRect(this.x, this.y, 10, 10);
+	this.game.ctx.restore();
 }
 
 function InputController(game) {
@@ -85,6 +88,22 @@ function InputController(game) {
 	this.yVel = 0;
 	this.right = false;
 	this.left = false;
+
+	this.setVelocity = function() {
+		if (this.right && this.xVel < 3) {
+			this.xVel += 0.1;
+		} else if (this.left && this.xVel > -3) {
+			this.xVel -= 0.1;
+		} else {
+			if (this.xVel > -0.2 && this.xVel < 0.2) {
+				this.xVel = 0;
+			} else if (this.xVel > 0) {
+				this.xVel -= 0.2;
+			} else if (this.xVel < 0) {
+				this.xVel += 0.2;
+			}
+		}
+	}
 }
 
 InputController.prototype.init = function() {
@@ -101,11 +120,9 @@ InputController.prototype.onKeyDown = function(e) {
 		break;
 		case 65:
 		this.left = true;
-		console.log(this.xVel);
 		break;
 		case 68:
 		this.right = true;
-		console.log(this.xVel);
 		break;
 	}
 }
@@ -124,18 +141,9 @@ InputController.prototype.onKeyUp = function(e) {
 	}
 }
 
-InputController.prototype.setVelocity = function() {
-	if (this.right && this.xVel < 3) {
-		this.xVel += 0.1;
-	} else if (this.left && this.xVel > -3) {
-		this.xVel -= 0.1;
-	} else {
-		if (this.xVel > -0.1 && this.xVel < 0.1) {
-			this.xVel = 0;
-		} else if (this.xVel > 0) {
-			this.xVel -= 0.1;
-		} else if (this.xVel < 0) {
-			this.xVel += 0.1;
-		}
-	}
+// Environment Block Function
+function Block(x, y, status) {
+	this.x = x;
+	this.y = y;
+	this.status = status;
 }
