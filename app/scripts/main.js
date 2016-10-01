@@ -9,7 +9,15 @@ window.onload = function() {
 	canvas.height = canvasHeight;
 	ctx = canvas.getContext("2d");
 	var game = new GameController(canvas, ctx);
-	game.walls.push(new Wall(new Point(200,200), new Point(400,200)));
+	game.blocks.push(new Block(new Point(200,200),new Point(400,205)));
+	game.blocks.push(new Block(new Point(400,350),new Point(500,370)));
+	game.blocks.push(new Block(new Point(700,100),new Point(720,120)));
+		game.blocks.push(new Block(new Point(600,240),new Point(620,260)));
+
+	for (var i = 0; i < game.blocks.length; i++) {
+		var block = game.blocks[i];
+		block.init(game);
+	}
 	game.start();
 }
 
@@ -19,13 +27,14 @@ function GameController(canvas, ctx) {
 	this.inputController = new InputController(this);
 	this.inputController.init();
 	this.player = new Player(100, 300, this);
-	this.clearColor = "#FFFFFF";
+	this.clearColor = "#08183d";
 	this.walls = [
 		new Wall(new Point(0,0), new Point(1000,0)),
 		new Wall(new Point(0,0), new Point(0,400)),
 		new Wall(new Point(1000,0), new Point(1000,400)),
 		new Wall(new Point(0,400), new Point(1000,400))
 	];
+	this.blocks = [];
 }
 
 GameController.prototype.start = function() {
@@ -48,6 +57,8 @@ GameController.prototype.render = function() {
 	this.clear();
 	var foreground = new Image();
 	this.ctx.save();
+
+	// Draw walls
 	this.ctx.beginPath();
 	for(var i = 0; i < this.walls.length; i++){
 		var wall = this.walls[i];
@@ -55,19 +66,34 @@ GameController.prototype.render = function() {
 		this.ctx.lineTo(wall.p2.x, wall.p2.y);
 	}
 	this.ctx.stroke();
-	this.ctx.strokeStyle = "#FF0000";
+
+	// Draw blocks
+	this.ctx.beginPath();
+	for (var i = 0; i < this.blocks.length; i++) {
+		var block = this.blocks[i];
+		block.map(this.ctx);
+	}
+	this.ctx.fill();
 
 	// Ray tracing
-
 	var intersects = this.findRays();
-	for(var i=0;i<intersects.length;i++){
+	this.ctx.fillStyle = "rgba(255,255,255,0.5)";
+	this.ctx.beginPath();
+	this.ctx.moveTo(intersects[0].x,intersects[0].y);
+	for(var i=1;i<intersects.length;i++){
 		var intersect = intersects[i];
-		// Draw red laser
-		this.ctx.beginPath();
-		this.ctx.moveTo(this.player.x,this.player.y);
 		this.ctx.lineTo(intersect.x,intersect.y);
-		this.ctx.stroke();
 	}
+	this.ctx.fill();
+
+	// Draw debugging rays
+	// for(var i=0;i<intersects.length;i++){
+	// 	var intersect = intersects[i];
+	// 	this.ctx.beginPath();
+	// 	this.ctx.moveTo(this.player.x,this.player.y);
+	// 	this.ctx.lineTo(intersect.x,intersect.y);
+	// 	this.ctx.stroke();
+	// }
 
 	this.player.render();
 	this.ctx.restore();
@@ -125,9 +151,15 @@ GameController.prototype.findRays = function() {
 				closestIntersect=intersect;
 			}
 		}
+		closestIntersect.angle = angle;
 		// Add to list of intersects
 		intersects.push(closestIntersect);
 	}
+
+	intersects = intersects.sort(function(a,b){
+		return a.angle-b.angle;
+	});
+
 	return intersects;
 }
 
@@ -215,17 +247,29 @@ InputController.prototype.onKeyUp = function(e) {
 	}
 }
 
-
 function Wall(p1, p2){
 	this.p1 = p1;
 	this.p2 = p2;
-	this.p1.parent = this;
-	this.p2.parent = this;
-	this.points = [p1, p2];
+}
 
-	this.length = function(){
-		return Math.sqrt(Math.pow(p2.x-p1.x, 2)+Math.pow(p2.y-p1.y, 2));
+function Block(p1, p2){
+	this.p1 = p1;
+	this.p2 = p2;
+
+	this.init = function(game) {
+		game.walls.push(new Wall(new Point(p1.x,p1.y), new Point(p2.x,p1.y)));
+		game.walls.push(new Wall(new Point(p2.x,p1.y), new Point(p2.x,p2.y)));
+		game.walls.push(new Wall(new Point(p2.x,p2.y), new Point(p1.x,p2.y)));
+		game.walls.push(new Wall(new Point(p1.x,p1.y), new Point(p1.x,p2.y)));
 	}
+
+	this.map = function(ctx) {
+		ctx.moveTo(p1.x,p1.y);
+		ctx.lineTo(p2.x,p1.y);
+		ctx.lineTo(p2.x,p2.y);
+		ctx.lineTo(p1.x,p2.y);
+	}
+
 }
 
 function getIntersection(ray,segment){
