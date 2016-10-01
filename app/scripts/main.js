@@ -56,6 +56,9 @@ GameController.prototype.render = function() {
 	}
 	this.ctx.stroke();
 	this.ctx.strokeStyle = "#FF0000";
+
+	// Ray tracing
+
 	var intersects = this.findRays();
 	for(var i=0;i<intersects.length;i++){
 		var intersect = intersects[i];
@@ -65,11 +68,41 @@ GameController.prototype.render = function() {
 		this.ctx.lineTo(intersect.x,intersect.y);
 		this.ctx.stroke();
 	}
+
 	this.player.render();
 	this.ctx.restore();
 }
 
 GameController.prototype.findRays = function() {
+	var points = (function(walls){
+		var a = [];
+		for (var i = 0; i < walls.length; i++) {
+			a.push(walls[i].p1,walls[i].p2);
+		}
+		return a;
+	})(this.walls);
+
+	var uniquePoints = (function(points){
+		var set = {};
+		return points.filter(function(p){
+			var key = p.x+","+p.y;
+			if(key in set){
+				return false;
+			}else{
+				set[key]=true;
+				return true;
+			}
+		});
+	})(points);
+
+	var uniqueAngles = [];
+	for(var i = 0; i < uniquePoints.length; i++) {
+		var uniquePoint = uniquePoints[i];
+		var angle = Math.atan2(uniquePoint.y-this.player.y,uniquePoint.x-this.player.x);
+		uniquePoint.angle = angle;
+		uniqueAngles.push(angle-0.00001, angle, angle+0.00001);
+	}
+
 	var intersects = [];
 	for(var angle = 0; angle < Math.PI*2; angle += (Math.PI*2)/50) {
 		var dx = Math.cos(angle);
