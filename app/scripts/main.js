@@ -9,12 +9,7 @@ window.onload = function() {
 	canvas.height = canvasHeight;
 	ctx = canvas.getContext("2d");
 	var game = new GameController(canvas, ctx);
-	for (var i = 1; i < 10; i++) {
-		game.blocks.push(new Block(i * 100, 100));
-	}
-	for (var i = 0; i < 100; i++) {
-		game.blocks.push(new Block(i * 10, 0));
-	}
+	game.walls.push(new Wall(new Point(200,200), new Point(400,200)));
 	game.start();
 }
 
@@ -25,7 +20,12 @@ function GameController(canvas, ctx) {
 	this.inputController.init();
 	this.player = new Player(100, 300, this);
 	this.clearColor = "#FFFFFF";
-	this.blocks = [];
+	this.walls = [
+		new Wall(new Point(0,0), new Point(1000,0)),
+		new Wall(new Point(0,0), new Point(0,400)),
+		new Wall(new Point(1000,0), new Point(1000,400)),
+		new Wall(new Point(0,400), new Point(1000,400))
+	];
 }
 
 GameController.prototype.start = function() {
@@ -46,13 +46,15 @@ GameController.prototype.update = function() {
 
 GameController.prototype.render = function() {
 	this.clear();
+	var foreground = new Image();
 	this.ctx.save();
 	this.ctx.beginPath();
-	for (var i = 0; i < this.blocks.length; i++) {
-		var block = this.blocks[i];
-		this.ctx.rect(block.x, block.y, 10, 10);
+	for(var i = 0; i < this.walls.length; i++){
+		var wall = this.walls[i];
+		this.ctx.moveTo(wall.p1.x, wall.p1.y);
+		this.ctx.lineTo(wall.p2.x, wall.p2.y);
 	}
-	this.ctx.fill();
+	this.ctx.stroke();
 	this.player.render();
 	this.ctx.restore();
 }
@@ -141,9 +143,17 @@ InputController.prototype.onKeyUp = function(e) {
 	}
 }
 
-// Environment Block Function
-function Block(x, y, status) {
-	this.x = x;
-	this.y = y;
-	this.status = status;
+
+function Wall(p1, p2){
+	this.p1 = p1;
+	this.p2 = p2;
+	this.p1.parent = this;
+	this.p2.parent = this;
+	this.points = [p1, p2];
+
+	this.length = function(){
+		return Math.sqrt(Math.pow(p2.x-p1.x, 2)+Math.pow(p2.y-p1.y, 2));
+	}
 }
+
+
