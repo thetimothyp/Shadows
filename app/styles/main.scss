@@ -1,0 +1,31 @@
+// bower:scss
+// endbower
+
+body, html {
+  background: #ffffff;
+  font-family: monospace;
+  color: #333;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#container {
+  text-align: center;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+
+  #canvas {
+    background-color: #FFFFFF;
+    margin: 0 auto;
+    display: block;
+    border: 1px solid black;
+  }
+
+  a {
+    display:block;
+    margin-top: 20px;
+    color: #999;
+  }
+}
