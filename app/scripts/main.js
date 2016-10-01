@@ -64,7 +64,7 @@ GameController.prototype.render = function() {
 		var intersect = intersects[i];
 		// Draw red laser
 		this.ctx.beginPath();
-		this.ctx.moveTo(this.player.x + 5,this.player.y + 5);
+		this.ctx.moveTo(this.player.x,this.player.y);
 		this.ctx.lineTo(intersect.x,intersect.y);
 		this.ctx.stroke();
 	}
@@ -94,17 +94,22 @@ GameController.prototype.findRays = function() {
 			}
 		});
 	})(points);
+	// console.log(uniquePoints);
 
 	var uniqueAngles = [];
 	for(var i = 0; i < uniquePoints.length; i++) {
 		var uniquePoint = uniquePoints[i];
 		var angle = Math.atan2(uniquePoint.y-this.player.y,uniquePoint.x-this.player.x);
+		if (angle<0) angle += Math.PI * 2;
 		uniquePoint.angle = angle;
-		uniqueAngles.push(angle-0.00001, angle, angle+0.00001);
+		uniqueAngles.push(angle-0.000001, angle, angle+0.000001);
 	}
+	// console.log(uniqueAngles);
 
 	var intersects = [];
-	for(var angle = 0; angle < Math.PI*2; angle += (Math.PI*2)/50) {
+	for(var j = 0; j < uniqueAngles.length; j++) {
+		var angle = uniqueAngles[j];
+		// console.log(angle);
 		var dx = Math.cos(angle);
 		var dy = Math.sin(angle);
 
@@ -147,7 +152,7 @@ Player.prototype.update = function() {
 Player.prototype.render = function() {
 	this.game.ctx.save();
 	this.game.ctx.fillStyle = "#FF0000";
-	this.game.ctx.fillRect(this.x, this.y, 10, 10);
+	this.game.ctx.fillRect(this.x - 5, this.y - 5, 10, 10);
 	this.game.ctx.restore();
 }
 
