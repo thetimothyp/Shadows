@@ -8,6 +8,8 @@ function InputController(game) {
 	this.setVelocity = function() {
 		if (this.right && this.xVel < 3) {
 			this.xVel += 0.1;
+			if (this.game.player.collisions.right)
+				this.xVel = 0;
 		} else if (this.left && this.xVel > -3) {
 			this.xVel -= 0.1;
 		} else {
