@@ -26,8 +26,7 @@ Player.prototype.update = function() {
 			}
 			if (this.x + 5 > block.p2.x) {
 				this.collisions.left = true;
-				if (!this.collisions.bottom)
-					this.x = block.p2.x + 5;
+				this.x = block.p2.x + 5;
 			}
 			if (this.y - 5 < block.p1.y) {
 				this.collisions.bottom = true;

@@ -23,9 +23,11 @@ body, html {
     border: 1px solid black;
   }
 
-  a {
-    display:block;
+  p {
     margin-top: 20px;
-    color: #999;
+    a {
+      color: #999;
+    }
+    
   }
 }

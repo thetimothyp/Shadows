@@ -6,12 +6,16 @@ function InputController(game) {
 	this.left = false;
 	this.jumping = false;
 
+	var maxSpeed = 2.5;
+	var gravity = 0.4;
+	var jumpForce = 5;
+
 	this.setVelocity = function() {
-		if (this.right && this.xVel < 2.5) {
+		if (this.right && this.xVel < maxSpeed) {
 			this.xVel += 0.3;
 			if (this.game.player.collisions.right)
 				this.xVel = 0;
-		} else if (this.left && this.xVel > -2.5) {
+		} else if (this.left && this.xVel > -1 * maxSpeed) {
 			this.xVel -= 0.3;
 		} else {
 			if (this.xVel > -0.3 && this.xVel < 0.3) {
@@ -28,13 +32,13 @@ function InputController(game) {
 		if (this.game.player.collisions.bottom)
 			this.yVel = 0;
 		else
-			this.yVel += 0.2;
+			this.yVel += gravity;
 	}
 
 	this.jump = function() {
-		console.log(this.yVel);
+		var jumpVel = -1 * jumpForce;
 		if (this.yVel == 0)
-			this.yVel = -4;
+			this.yVel = jumpVel;
 	}
 }
 
