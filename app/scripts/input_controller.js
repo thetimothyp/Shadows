@@ -4,14 +4,15 @@ function InputController(game) {
 	this.yVel = 0;
 	this.right = false;
 	this.left = false;
+	this.jumping = false;
 
 	this.setVelocity = function() {
 		if (this.right && this.xVel < 3) {
-			this.xVel += 0.1;
+			this.xVel += 0.2;
 			if (this.game.player.collisions.right)
 				this.xVel = 0;
 		} else if (this.left && this.xVel > -3) {
-			this.xVel -= 0.1;
+			this.xVel -= 0.2;
 		} else {
 			if (this.xVel > -0.2 && this.xVel < 0.2) {
 				this.xVel = 0;
@@ -21,6 +22,19 @@ function InputController(game) {
 				this.xVel += 0.2;
 			}
 		}
+	}
+
+	this.setGravity = function() {
+		if (this.game.player.collisions.bottom)
+			this.yVel = 0;
+		else
+			this.yVel += 0.2;
+	}
+
+	this.jump = function() {
+		console.log(this.yVel);
+		if (this.yVel == 0)
+			this.yVel = -4;
 	}
 }
 
@@ -34,7 +48,7 @@ InputController.prototype.init = function() {
 InputController.prototype.onKeyDown = function(e) {
 	switch(e.keyCode) {
 		case 87:
-		console.log("up pressed");
+		this.jumping = true;
 		break;
 		case 65:
 		this.left = true;
@@ -48,7 +62,7 @@ InputController.prototype.onKeyDown = function(e) {
 InputController.prototype.onKeyUp = function(e) {
 	switch(e.keyCode) {
 		case 87:
-		console.log("up released");
+		this.jumping = false;
 		break;
 		case 65:
 		this.left = false;

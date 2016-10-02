@@ -8,7 +8,11 @@ function Player(x, y, game) {
 
 Player.prototype.update = function() {
 	this.input.setVelocity();
+	if (this.input.jumping)
+		this.input.jump();
+	this.input.setGravity();
 	this.x += this.input.xVel;
+	this.y += this.input.yVel;
 	this.resetCollisions();
 	for (var i = 0; i < this.game.blocks.length; i++) {
 		var block = this.game.blocks[i];
@@ -22,7 +26,12 @@ Player.prototype.update = function() {
 			}
 			if (this.x + 5 > block.p2.x) {
 				this.collisions.left = true;
-				this.x = block.p2.x + 5;
+				if (!this.collisions.bottom)
+					this.x = block.p2.x + 5;
+			}
+			if (this.y - 5 < block.p1.y) {
+				this.collisions.bottom = true;
+				this.y = block.p1.y - 5;
 			}
 		}
 	}
