@@ -12,6 +12,7 @@ function GameController(canvas, ctx) {
 		new Wall(new Point(0,400), new Point(1000,400))
 	];
 	this.blocks = [];
+	this.intersects = [];
 }
 
 GameController.prototype.start = function() {
@@ -27,6 +28,7 @@ GameController.prototype.clear = function() {
 }
 
 GameController.prototype.update = function() {
+	this.intersects = findRays(this);
 	this.player.update();
 }
 
@@ -53,12 +55,11 @@ GameController.prototype.render = function() {
 	this.ctx.fill();
 
 	// Ray tracing
-	var intersects = findRays(this);
 	this.ctx.fillStyle = "rgba(255,255,255,0.5)";
 	this.ctx.beginPath();
-	this.ctx.moveTo(intersects[0].x,intersects[0].y);
-	for(var i=1;i<intersects.length;i++){
-		var intersect = intersects[i];
+	this.ctx.moveTo(this.intersects[0].x,this.intersects[0].y);
+	for(var i=1;i<this.intersects.length;i++){
+		var intersect = this.intersects[i];
 		this.ctx.lineTo(intersect.x,intersect.y);
 	}
 	this.ctx.fill();
