@@ -59,7 +59,7 @@ GameController.prototype.render = function() {
 	this.ctx.moveTo(intersects[0].x,intersects[0].y);
 	for(var i=1;i<intersects.length;i++){
 		var intersect = intersects[i];
-		this.ctx.lineTo(intersect.x + 0.5,intersect.y + 0.5);
+		this.ctx.lineTo(intersect.x,intersect.y);
 	}
 	this.ctx.fill();
 	this.player.render();
