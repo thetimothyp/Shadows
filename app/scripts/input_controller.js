@@ -7,19 +7,19 @@ function InputController(game) {
 	this.jumping = false;
 
 	this.setVelocity = function() {
-		if (this.right && this.xVel < 3) {
-			this.xVel += 0.2;
+		if (this.right && this.xVel < 2.5) {
+			this.xVel += 0.3;
 			if (this.game.player.collisions.right)
 				this.xVel = 0;
-		} else if (this.left && this.xVel > -3) {
-			this.xVel -= 0.2;
+		} else if (this.left && this.xVel > -2.5) {
+			this.xVel -= 0.3;
 		} else {
-			if (this.xVel > -0.2 && this.xVel < 0.2) {
+			if (this.xVel > -0.3 && this.xVel < 0.3) {
 				this.xVel = 0;
 			} else if (this.xVel > 0) {
-				this.xVel -= 0.2;
+				this.xVel -= 0.3;
 			} else if (this.xVel < 0) {
-				this.xVel += 0.2;
+				this.xVel += 0.3;
 			}
 		}
 	}
