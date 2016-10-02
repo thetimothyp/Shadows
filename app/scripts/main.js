@@ -16,6 +16,7 @@ window.onload = function() {
 	for (var i = 0; i < 6; i++) {
 		game.blocks.push(new Block(new Point(80+100*i,360),new Point(140+100*i,370)));
 	}
+	game.blocks.push(new Block(new Point(200,340),new Point(220,360)));
 	for (var i = 0; i < game.blocks.length; i++) {
 		var block = game.blocks[i];
 		block.init(game);

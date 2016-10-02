@@ -21,9 +21,9 @@ function Block(p1, p2){
 	}
 
 	this.map = function(ctx) {
-		ctx.moveTo(p1.x,p1.y);
-		ctx.lineTo(p2.x,p1.y);
-		ctx.lineTo(p2.x,p2.y);
-		ctx.lineTo(p1.x,p2.y);
+		ctx.moveTo(p1.x + 0.5,p1.y + 0.5);
+		ctx.lineTo(p2.x + 0.5,p1.y + 0.5);
+		ctx.lineTo(p2.x + 0.5,p2.y + 0.5);
+		ctx.lineTo(p1.x + 0.5,p2.y + 0.5);
 	}
 }

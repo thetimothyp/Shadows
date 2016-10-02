@@ -11,7 +11,10 @@ Player.prototype.update = function() {
 	if (this.input.jumping)
 		this.input.jump();
 	this.input.setGravity();
-	this.x += this.input.xVel;
+	if (!this.collisions.right && this.input.xVel > 0)
+		this.x += this.input.xVel;
+	if (!this.collisions.left && this.input.xVel < 0)
+		this.x += this.input.xVel;
 	this.y += this.input.yVel;
 	this.resetCollisions();
 	for (var i = 0; i < this.game.blocks.length; i++) {
@@ -22,11 +25,9 @@ Player.prototype.update = function() {
 			this.y + 5 > block.p1.y) {
 			if (this.x - 5 < block.p1.x) {
 				this.collisions.right = true;
-				this.x = block.p1.x - 5;
 			}
 			if (this.x + 5 > block.p2.x) {
 				this.collisions.left = true;
-				this.x = block.p2.x + 5;
 			}
 			if (this.y - 5 < block.p1.y) {
 				this.collisions.bottom = true;

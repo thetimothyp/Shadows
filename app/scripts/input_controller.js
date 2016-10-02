@@ -17,6 +17,8 @@ function InputController(game) {
 				this.xVel = 0;
 		} else if (this.left && this.xVel > -1 * maxSpeed) {
 			this.xVel -= 0.3;
+			if (this.game.player.collisions.left)
+				this.xVel = 0;
 		} else {
 			if (this.xVel > -0.3 && this.xVel < 0.3) {
 				this.xVel = 0;
