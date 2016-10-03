@@ -39,6 +39,7 @@ function InputController(game) {
 
 	this.jump = function() {
 		var jumpVel = -1 * jumpForce;
+		console.log(this.yVel);
 		if (this.yVel == 0)
 			this.yVel = jumpVel;
 	}
