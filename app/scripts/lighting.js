@@ -1,4 +1,9 @@
-function getIntersection(ray,segment){
+function LightingController(game) {
+	this.intersect = [];
+	this.game = game;
+}
+
+LightingController.prototype.getIntersection = function(ray,segment){
 	// RAY in parametric: Point + Delta*T1
 	var r_px = ray.p1.x;
 	var r_py = ray.p1.y;
@@ -32,15 +37,14 @@ function getIntersection(ray,segment){
 	return pt;
 }
 
-
-function findRays(game) {
+LightingController.prototype.findRays = function() {
 	var points = (function(walls){
 		var a = [];
 		for (var i = 0; i < walls.length; i++) {
 			a.push(walls[i].p1,walls[i].p2);
 		}
 		return a;
-	})(game.walls);
+	})(this.game.walls);
 
 	var uniquePoints = (function(points){
 		var set = {};
@@ -58,7 +62,7 @@ function findRays(game) {
 	var uniqueAngles = [];
 	for(var i = 0; i < uniquePoints.length; i++) {
 		var uniquePoint = uniquePoints[i];
-		var angle = Math.atan2(uniquePoint.y-game.player.y,uniquePoint.x-game.player.x);
+		var angle = Math.atan2(uniquePoint.y-this.game.player.y,uniquePoint.x-this.game.player.x);
 		if (angle<0) angle += Math.PI * 2;
 		uniquePoint.angle = angle;
 		uniqueAngles.push(angle-0.000001, angle, angle+0.000001);
@@ -70,13 +74,13 @@ function findRays(game) {
 		var dx = Math.cos(angle);
 		var dy = Math.sin(angle);
 
-		var ray = new Wall(new Point(game.player.x, game.player.y),
-			new Point(game.player.x + dx, game.player.y + dy));
+		var ray = new Wall(new Point(this.game.player.x, this.game.player.y),
+			new Point(this.game.player.x + dx, this.game.player.y + dy));
 
 		// Find CLOSEST intersection
 		var closestIntersect = null;
-		for(var i=0;i<game.walls.length;i++){
-			var intersect = getIntersection(ray,game.walls[i]);
+		for(var i=0;i<this.game.walls.length;i++){
+			var intersect = this.getIntersection(ray,this.game.walls[i]);
 			if(!intersect) continue;
 			if(!closestIntersect || intersect.param<closestIntersect.param){
 				closestIntersect=intersect;
@@ -94,11 +98,11 @@ function findRays(game) {
 	return intersects;
 }
 
-function pInShadow (game, p) {
+LightingController.prototype.pInShadow = function(p) {
 	var vert_x = [];
 	var vert_y = [];
-	for(var i=1;i<game.intersects.length;i++){
-		var intersect = game.intersects[i];
+	for(var i=1;i<this.game.intersects.length;i++){
+		var intersect = this.game.intersects[i];
 		vert_x.push(intersect.x);
 		vert_y.push(intersect.y);
 	}

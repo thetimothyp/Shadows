@@ -3,8 +3,8 @@ function GameController(canvas, ctx) {
 	this.ctx = ctx;
 	this.inputController = new InputController(this);
 	this.inputController.init();
+	this.lc = new LightingController(this);
 	this.player = new Player(100, 300, this);
-	this.clearColor = "#08183d";
 	this.walls = [
 		new Wall(new Point(0,0), new Point(1000,0)),
 		new Wall(new Point(0,0), new Point(0,400)),
@@ -12,7 +12,6 @@ function GameController(canvas, ctx) {
 		new Wall(new Point(0,400), new Point(1000,400))
 	];
 	this.blocks = [];
-	this.intersects = [];
 }
 
 GameController.prototype.start = function() {
@@ -28,7 +27,7 @@ GameController.prototype.clear = function() {
 }
 
 GameController.prototype.update = function() {
-	this.intersects = findRays(this);
+	this.lc.intersects = this.lc.findRays();
 	this.player.update();
 }
 
@@ -57,9 +56,9 @@ GameController.prototype.render = function() {
 	// Ray tracing
 	this.ctx.fillStyle = "rgba(255,255,255,0.5)";
 	this.ctx.beginPath();
-	this.ctx.moveTo(this.intersects[0].x,this.intersects[0].y);
-	for(var i=1;i<this.intersects.length;i++){
-		var intersect = this.intersects[i];
+	this.ctx.moveTo(this.lc.intersects[0].x,this.lc.intersects[0].y);
+	for(var i=1;i<this.lc.intersects.length;i++){
+		var intersect = this.lc.intersects[i];
 		this.ctx.lineTo(intersect.x,intersect.y);
 	}
 	this.ctx.fill();
