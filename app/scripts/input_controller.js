@@ -31,7 +31,7 @@ function InputController(game) {
 	}
 
 	this.setGravity = function() {
-		if (this.game.player.collisions.bottom)
+		if (this.game.player.collisions.bottom && !this.jumping)
 			this.yVel = 0;
 		else
 			this.yVel += gravity;
@@ -39,9 +39,7 @@ function InputController(game) {
 
 	this.jump = function() {
 		var jumpVel = -1 * jumpForce;
-		console.log(this.yVel);
-		if (this.yVel == 0)
-			this.yVel = jumpVel;
+		this.yVel = jumpVel;
 	}
 }
 
@@ -55,7 +53,10 @@ InputController.prototype.init = function() {
 InputController.prototype.onKeyDown = function(e) {
 	switch(e.keyCode) {
 		case 87:
-		this.jumping = true;
+		if (!this.jumping) {
+			this.jumping = true;
+			this.jump();
+		}
 		break;
 		case 65:
 		this.left = true;
@@ -69,7 +70,7 @@ InputController.prototype.onKeyDown = function(e) {
 InputController.prototype.onKeyUp = function(e) {
 	switch(e.keyCode) {
 		case 87:
-		this.jumping = false;
+		// this.jumping = false;
 		break;
 		case 65:
 		this.left = false;
