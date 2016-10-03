@@ -23,11 +23,13 @@ Player.prototype.update = function() {
 			this.x + 5 > block.p1.x &&
 			this.y - 5 < block.p2.y &&
 			this.y + 5 > block.p1.y) {
-			if (this.x - 5 < block.p1.x) {
+			if (Math.abs(this.x + 5 - block.p1.x) < 2.7) {
 				this.collisions.right = true;
+				this.x = block.p1.x - 5;
 			}
-			if (this.x + 5 > block.p2.x) {
+			if (Math.abs(this.x - 5 - block.p2.x) < 2.7) {
 				this.collisions.left = true;
+				this.x = block.p2.x + 5;
 			}
 			if (this.y - 5 < block.p1.y) {
 				this.collisions.bottom = true;
