@@ -17,30 +17,7 @@ Player.prototype.update = function() {
 		this.input.jumping = true;
 	this.y += this.input.yVel;
 	this.resetCollisions();
-	for (var i = 0; i < this.game.blocks.length; i++) {
-		var block = this.game.blocks[i];
-		if (this.x - 5.01 <= block.p2.x &&
-			this.x + 5.01 >= block.p1.x &&
-			this.y - 5.01 <= block.p2.y &&
-			this.y + 5.01 >= block.p1.y) {
-			if (Math.abs(this.x + 5 - block.p1.x) < 2.7) {
-				this.collisions.right = true;
-				this.x = block.p1.x - 5.01;
-			}
-			if (Math.abs(this.x - 5 - block.p2.x) < 2.7) {
-				this.collisions.left = true;
-				this.x = block.p2.x + 5.01;
-			}
-			if (this.y - 5 < block.p1.y && !this.collisions.right && !this.collisions.left) {
-				this.collisions.bottom = true;
-				if (this.input.jumping)
-					this.input.jumping = false;
-				if (!this.input.jumping) {
-					this.y = block.p1.y - 5.01;
-				}
-			}
-		}
-	}
+	this.detectCollisions();
 }
 
 Player.prototype.render = function() {
@@ -56,5 +33,32 @@ Player.prototype.resetCollisions = function() {
 		"right": false,
 		"bottom": false,
 		"left": false
+	}
+}
+
+Player.prototype.detectCollisions = function() {
+	for (var i = 0; i < this.game.blocks.length; i++) {
+		var block = this.game.blocks[i];
+		if (this.x - 5.01 <= block.p2.x &&
+			this.x + 5.01 >= block.p1.x &&
+			this.y - 5.01 <= block.p2.y &&
+			this.y + 5.01 >= block.p1.y) {
+			if (Math.abs(this.x + 5 - block.p1.x) < 2.3) {
+				this.collisions.right = true;
+				this.x = block.p1.x - 5.01;
+			}
+			if (Math.abs(this.x - 5 - block.p2.x) < 2.3) {
+				this.collisions.left = true;
+				this.x = block.p2.x + 5.01;
+			}
+			if (this.y - 5 < block.p1.y && !this.collisions.right && !this.collisions.left) {
+				this.collisions.bottom = true;
+				if (this.input.jumping)
+					this.input.jumping = false;
+				if (!this.input.jumping) {
+					this.y = block.p1.y - 5.01;
+				}
+			}
+		}
 	}
 }
