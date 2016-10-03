@@ -69,9 +69,6 @@ InputController.prototype.onKeyDown = function(e) {
 
 InputController.prototype.onKeyUp = function(e) {
 	switch(e.keyCode) {
-		case 87:
-		// this.jumping = false;
-		break;
 		case 65:
 		this.left = false;
 		break;
