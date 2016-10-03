@@ -16,6 +16,8 @@ function GameController(canvas, ctx) {
 
 GameController.prototype.start = function() {
 	this.update();
+	if (this.lc.pInShadow(new Point(10,10)))
+		console.log("top left corner in shadow");
 	this.render();
 	window.requestAnimationFrame(this.start.bind(this));
 }

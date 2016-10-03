@@ -101,8 +101,8 @@ LightingController.prototype.findRays = function() {
 LightingController.prototype.pInShadow = function(p) {
 	var vert_x = [];
 	var vert_y = [];
-	for(var i=1;i<this.game.intersects.length;i++){
-		var intersect = this.game.intersects[i];
+	for(var i=1;i<this.intersects.length;i++){
+		var intersect = this.intersects[i];
 		vert_x.push(intersect.x);
 		vert_y.push(intersect.y);
 	}
