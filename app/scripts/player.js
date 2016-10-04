@@ -43,11 +43,11 @@ Player.prototype.detectCollisions = function() {
 			this.x + 5.01 >= block.p1.x &&
 			this.y - 5.01 <= block.p2.y &&
 			this.y + 5.01 >= block.p1.y) {
-			if (Math.abs(this.x + 5 - block.p1.x) < 2.6) {
+			if (Math.abs(this.x + 5 - block.p1.x) < 2.7) {
 				this.collisions.right = true;
 				this.x = block.p1.x - 5.01;
 			}
-			if (Math.abs(this.x - 5 - block.p2.x) < 2.6) {
+			if (Math.abs(this.x - 5 - block.p2.x) < 2.7) {
 				this.collisions.left = true;
 				this.x = block.p2.x + 5.01;
 			}
