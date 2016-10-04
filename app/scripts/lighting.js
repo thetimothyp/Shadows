@@ -62,7 +62,7 @@ LightingController.prototype.findRays = function() {
 	var uniqueAngles = [];
 	for(var i = 0; i < uniquePoints.length; i++) {
 		var uniquePoint = uniquePoints[i];
-		var angle = Math.atan2(uniquePoint.y-this.game.player.y,uniquePoint.x-this.game.player.x);
+		var angle = Math.atan2(uniquePoint.y-this.game.player.lantern.y,uniquePoint.x-this.game.player.lantern.x);
 		if (angle<0) angle += Math.PI * 2;
 		uniquePoint.angle = angle;
 		uniqueAngles.push(angle-0.000001, angle, angle+0.000001);
@@ -74,8 +74,8 @@ LightingController.prototype.findRays = function() {
 		var dx = Math.cos(angle);
 		var dy = Math.sin(angle);
 
-		var ray = new Wall(new Point(this.game.player.x, this.game.player.y),
-			new Point(this.game.player.x + dx, this.game.player.y + dy));
+		var ray = new Wall(new Point(this.game.player.lantern.x, this.game.player.lantern.y),
+			new Point(this.game.player.lantern.x + dx, this.game.player.lantern.y + dy));
 
 		// Find CLOSEST intersection
 		var closestIntersect = null;

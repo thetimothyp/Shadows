@@ -5,6 +5,7 @@ function InputController(game) {
 	this.right = false;
 	this.left = false;
 	this.jumping = false;
+	this.facingRight = true;
 
 	var maxSpeed = 2.5;
 	var gravity = 0.4;
@@ -60,10 +61,14 @@ InputController.prototype.onKeyDown = function(e) {
 		break;
 		case 65:
 		this.left = true;
+		this.facingRight = false;
 		break;
 		case 68:
+		this.facingRight = true;
 		this.right = true;
 		break;
+		case 69:
+		this.game.player.lantern.toggleCarried();
 	}
 }
 
