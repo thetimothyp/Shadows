@@ -1,8 +1,10 @@
 ### TODO:
-- separate light source from player
-  - create Lantern class
-  - attach Lantern to Player
-  - cast rays from Lantern instead of Player
+- ~~separate light source from player~~
+  - ~~create Lantern class~~
+  - ~~attach Lantern to Player~~
+  - ~~cast rays from Lantern instead of Player~~
+  - ~~Player can throw/pick up Lantern~~
+  - ~~put colliders on Lantern (separate from Player)~~
 - implement background with lighting
   - dark full background image
   - lit background image masked by light polygon
