@@ -135,7 +135,9 @@ Lantern.prototype.detectCollisions = function() {
 }
 
 Lantern.prototype.toggleCarried = function() {
-	this.attachedToPlayer = !this.attachedToPlayer;
+	if (Math.abs(this.x - this.player.x) < 15 &&
+		Math.abs(this.y - this.player.y) < 15)
+		this.attachedToPlayer = !this.attachedToPlayer;
 }
 
 Lantern.prototype.setVelocity = function() {
